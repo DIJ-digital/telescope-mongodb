@@ -38,12 +38,15 @@ class ClientRequestWatcher extends Watcher
             return;
         }
 
-        Telescope::recordClientRequest(IncomingEntry::make([
-            'method' => $event->request->method(),
-            'uri' => $event->request->url(),
-            'headers' => $this->headers($event->request->headers()),
-            'payload' => $this->payload($this->input($event->request)),
-        ]));
+        Telescope::recordClientRequest(
+            IncomingEntry::make([
+                'method' => $event->request->method(),
+                'uri' => $event->request->url(),
+                'headers' => $this->headers($event->request->headers()),
+                'payload' => $this->payload($this->input($event->request)),
+            ])
+            ->tags([$event->request->toPsrRequest()->getUri()->getHost()])
+        );
     }
 
     /**
@@ -58,16 +61,19 @@ class ClientRequestWatcher extends Watcher
             return;
         }
 
-        Telescope::recordClientRequest(IncomingEntry::make([
-            'method' => $event->request->method(),
-            'uri' => $event->request->url(),
-            'headers' => $this->headers($event->request->headers()),
-            'payload' => $this->payload($this->input($event->request)),
-            'response_status' => $event->response->status(),
-            'response_headers' => $this->headers($event->response->headers()),
-            'response' => $this->response($event->response),
-            'duration' => $this->duration($event->response),
-        ]));
+        Telescope::recordClientRequest(
+            IncomingEntry::make([
+                'method' => $event->request->method(),
+                'uri' => $event->request->url(),
+                'headers' => $this->headers($event->request->headers()),
+                'payload' => $this->payload($this->input($event->request)),
+                'response_status' => $event->response->status(),
+                'response_headers' => $this->headers($event->response->headers()),
+                'response' => $this->response($event->response),
+                'duration' => $this->duration($event->response),
+            ])
+            ->tags([$event->request->toPsrRequest()->getUri()->getHost()])
+        );
     }
 
     /**

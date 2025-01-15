@@ -3,6 +3,7 @@
 namespace Laravel\Telescope\Tests\Watchers;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Laravel\Telescope\EntryType;
 use Laravel\Telescope\Tests\FeatureTestCase;
@@ -32,6 +33,10 @@ class ClientRequestWatcherTest extends FeatureTestCase
         Http::withHeaders(['Accept-Language' => 'nl_BE'])->get('https://laravel.com/foo/bar');
 
         $entry = $this->loadTelescopeEntries()->first();
+        $tags = DB::table('telescope_entries_tags')
+            ->where('entry_uuid', $entry->getKey())
+            ->pluck('tag')
+            ->all();
 
         $this->assertNotNull($entry);
         $this->assertSame(EntryType::CLIENT_REQUEST, $entry->type);
@@ -42,6 +47,7 @@ class ClientRequestWatcherTest extends FeatureTestCase
         $this->assertSame(201, $entry->content['response_status']);
         $this->assertSame(['content-type' => 'application/json', 'cache-control' => 'no-cache,private'], $entry->content['response_headers']);
         $this->assertSame(['foo' => 'bar'], $entry->content['response']);
+        $this->assertContains('laravel.com', $tags);
     }
 
     public function test_client_request_watcher_registers_redirect_response()
@@ -53,9 +59,14 @@ class ClientRequestWatcherTest extends FeatureTestCase
         Http::withoutRedirecting()->get('https://laravel.com');
 
         $entry = $this->loadTelescopeEntries()->first();
+        $tags = DB::table('telescope_entries_tags')
+            ->where('entry_uuid', $entry->getKey())
+            ->pluck('tag')
+            ->all();
 
         $this->assertNotNull($entry);
         $this->assertEquals('Redirected to https://foo.bar', $entry->content['response']);
+        $this->assertContains('laravel.com', $tags);
     }
 
     public function test_client_request_watcher_plain_text_response()
@@ -83,9 +94,14 @@ class ClientRequestWatcherTest extends FeatureTestCase
         Http::get('https://laravel.com');
 
         $entry = $this->loadTelescopeEntries()->first();
+        $tags = DB::table('telescope_entries_tags')
+            ->where('entry_uuid', $entry->getKey())
+            ->pluck('tag')
+            ->all();
 
         $this->assertNotNull($entry);
         $this->assertEquals(['error' => 'Something went wrong!'], $entry->content['response']);
+        $this->assertContains('laravel.com', $tags);
     }
 
     public function test_client_request_watcher_hides_password()

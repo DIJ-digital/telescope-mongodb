@@ -17,6 +17,7 @@
         "php": "^8.0",
         "ext-json": "*",
         "laravel/framework": "^8.37|^9.0|^10.0|^11.0",
+        "mongodb/laravel-mongodb": "^5.1",
         "symfony/console": "^5.3|^6.0|^7.0",
         "symfony/var-dumper": "^5.0|^6.0|^7.0"
     },
@@ -64,6 +65,6 @@
             "@php ./vendor/bin/testbench serve"
         ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

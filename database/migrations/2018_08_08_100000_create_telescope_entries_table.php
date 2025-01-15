@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use MongoDB\Laravel\Schema\Blueprint;
 
 return new class extends Migration
 {
@@ -21,7 +21,7 @@ return new class extends Migration
     {
         $schema = Schema::connection($this->getConnection());
 
-        $schema->create('telescope_entries', function (Blueprint $collection){
+        $schema->create('telescope_entries', static function (Blueprint $collection) {
             $collection->unique('uuid');
             $collection->index('batch_id');
             $collection->index('family_hash');

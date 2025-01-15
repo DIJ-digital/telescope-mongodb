@@ -1,6 +1,56 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/telescope/compare/v5.0.5...5.x)
+## [Unreleased](https://github.com/laravel/telescope/compare/v5.3.0...5.x)
+
+## [v5.3.0](https://github.com/laravel/telescope/compare/v5.2.6...v5.3.0) - 2024-12-26
+
+* [5.x] Tag client request hostname automatically by [@dshafik](https://github.com/dshafik) in https://github.com/laravel/telescope/pull/1553
+* Bump [@babel](https://github.com/babel)/traverse from 7.22.20 to 7.26.4 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1555
+
+## [v5.2.6](https://github.com/laravel/telescope/compare/v5.2.5...v5.2.6) - 2024-11-25
+
+* [5.x] Supports PHP 8.4 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1544
+* [5.x] fix implicitly marking parameter as nullable by [@SupianIDz](https://github.com/SupianIDz) in https://github.com/laravel/telescope/pull/1550
+
+## [v5.2.5](https://github.com/laravel/telescope/compare/v5.2.4...v5.2.5) - 2024-10-31
+
+* Bump elliptic from 6.5.7 to 6.6.0 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1541
+
+## [v5.2.4](https://github.com/laravel/telescope/compare/v5.2.3...v5.2.4) - 2024-10-29
+
+* [5.x] Fix `JobWatcher` when processing deleted instance of `SerializesModels` by [@hapidjus](https://github.com/hapidjus) in https://github.com/laravel/telescope/pull/1539
+
+## [v5.2.3](https://github.com/laravel/telescope/compare/v5.2.2...v5.2.3) - 2024-10-13
+
+* Bump webpack from 5.88.2 to 5.94.0 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1513
+* Bump elliptic from 6.5.4 to 6.5.7 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1515
+* Bump send and express by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1522
+* Bump serve-static and express by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1521
+* Update logo to support dark/light theme by [@milewski](https://github.com/milewski) in https://github.com/laravel/telescope/pull/1529
+* Bump cookie and express by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1535
+* [5.x] Added `isEvent` and `isCache` methods to `IncomingEntry` by [@mrazinshaikh](https://github.com/mrazinshaikh) in https://github.com/laravel/telescope/pull/1536
+
+## [v5.2.2](https://github.com/laravel/telescope/compare/v5.2.1...v5.2.2) - 2024-08-26
+
+* Revert "[5.x] Enhance Telescope Clear Method" by [@taylorotwell](https://github.com/taylorotwell) in https://github.com/laravel/telescope/pull/1510
+
+## [v5.2.1](https://github.com/laravel/telescope/compare/v5.2.0...v5.2.1) - 2024-08-20
+
+* Fix that multiple use of the same binding is only replaced once in the query by [@kohlerdominik](https://github.com/kohlerdominik) in https://github.com/laravel/telescope/pull/1503
+* [5.x] Enhance Telescope Clear Method by [@a1383n](https://github.com/a1383n) in https://github.com/laravel/telescope/pull/1507
+
+## [v5.2.0](https://github.com/laravel/telescope/compare/v5.1.1...v5.2.0) - 2024-08-02
+
+* add support for non-standard PDOs by [@macbookandrew](https://github.com/macbookandrew) in https://github.com/laravel/telescope/pull/1499
+
+## [v5.1.1](https://github.com/laravel/telescope/compare/v5.1.0...v5.1.1) - 2024-06-27
+
+* Revert "[5.x] Enhance query preview when using the pgsql driver" by [@driesvints](https://github.com/driesvints) in https://github.com/laravel/telescope/pull/1491
+
+## [v5.1.0](https://github.com/laravel/telescope/compare/v5.0.5...v5.1.0) - 2024-06-17
+
+* [5.x] Add `isLog` to `IncomingEntry` by [@ngunyimacharia](https://github.com/ngunyimacharia) in https://github.com/laravel/telescope/pull/1485
+* [5.x] Enhance query preview when using the pgsql driver by [@morloderex](https://github.com/morloderex) in https://github.com/laravel/telescope/pull/1486
 
 ## [v5.0.5](https://github.com/laravel/telescope/compare/v5.0.4...v5.0.5) - 2024-05-09
 

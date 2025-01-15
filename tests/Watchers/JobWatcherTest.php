@@ -6,16 +6,19 @@ use Exception;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Queue\Jobs\Job;
 use Illuminate\Queue\QueueManager;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Str;
 use Laravel\Telescope\EntryType;
 use Laravel\Telescope\Tests\FeatureTestCase;
 use Laravel\Telescope\Watchers\JobWatcher;
+use Orchestra\Testbench\Attributes\WithMigration;
+use Orchestra\Testbench\Factories\UserFactory;
 use Throwable;
 
+#[WithMigration('queue')]
 class JobWatcherTest extends FeatureTestCase
 {
     protected function getEnvironmentSetUp($app)
@@ -29,13 +32,6 @@ class JobWatcherTest extends FeatureTestCase
         $app->get('config')->set('queue.failed.database', 'testbench');
 
         $app->get('config')->set('logging.default', 'syslog');
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->createJobsTable();
     }
 
     public function test_job_registers_entry()
@@ -130,31 +126,28 @@ class JobWatcherTest extends FeatureTestCase
         $this->assertSame(['framework' => 'Laravel'], $entry->content['data']);
     }
 
-    private function createJobsTable(): void
+    public function test_job_can_handle_deleted_serialized_model()
     {
-        if (! Schema::hasTable('jobs')) {
-            Schema::create('jobs', function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->string('queue')->index();
-                $table->longText('payload');
-                $table->unsignedTinyInteger('attempts');
-                $table->unsignedInteger('reserved_at')->nullable();
-                $table->unsignedInteger('available_at');
-                $table->unsignedInteger('created_at');
-            });
-        }
+        $user = UserFactory::new()->create();
 
-        if (! Schema::hasTable('failed_jobs')) {
-            Schema::create('failed_jobs', function (Blueprint $table) {
-                $table->uuid('uuid');
-                $table->bigIncrements('id');
-                $table->text('connection');
-                $table->text('queue');
-                $table->longText('payload');
-                $table->longText('exception');
-                $table->timestamp('failed_at')->useCurrent();
-            });
-        }
+        $this->app->get(Dispatcher::class)->dispatch(
+            new MockedDeleteUserJob($user)
+        );
+
+        $this->artisan('queue:work', [
+            'connection' => 'database',
+            '--once' => true,
+        ])->run();
+
+        $entry = $this->loadTelescopeEntries()->first();
+
+        $this->assertSame(EntryType::JOB, $entry->type);
+        $this->assertSame('processed', $entry->content['status']);
+        $this->assertSame('database', $entry->content['connection']);
+        $this->assertSame(MockedDeleteUserJob::class, $entry->content['name']);
+        $this->assertSame('default', $entry->content['queue']);
+
+        $this->assertSame(sprintf('%s:%s', get_class($user), $user->getKey()), $entry->content['data']['user']);
     }
 }
 
@@ -174,6 +167,27 @@ class MockedBatchableJob implements ShouldQueue
     public function handle()
     {
         //
+    }
+}
+
+class MockedDeleteUserJob implements ShouldQueue
+{
+    use SerializesModels;
+
+    public $connection = 'database';
+
+    public $deleteWhenMissingModels = true;
+
+    public $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function handle()
+    {
+        $this->user->delete();
     }
 }
 

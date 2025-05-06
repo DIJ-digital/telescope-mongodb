@@ -2,6 +2,9 @@ name: compile assets
 
 on: [push]
 
+permissions:
+  contents: write
+
 jobs:
   compile:
     uses: laravel/.github/.github/workflows/compile-assets.yml@main

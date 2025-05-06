@@ -1,6 +1,31 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/telescope/compare/v5.3.0...5.x)
+## [Unreleased](https://github.com/laravel/telescope/compare/v5.7.0...5.x)
+
+## [v5.7.0](https://github.com/laravel/telescope/compare/v5.6.0...v5.7.0) - 2025-03-27
+
+* [5.x] Record plain/text request content by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1578
+
+## [v5.6.0](https://github.com/laravel/telescope/compare/v5.5.1...v5.6.0) - 2025-03-17
+
+* [5.x] Fix empty avatar on nullable user email by [@ShadyZekry](https://github.com/ShadyZekry) in https://github.com/laravel/telescope/pull/1575
+* Add Hydrated Models Count to Models Table on the Request Details Page by [@niteen1593](https://github.com/niteen1593) in https://github.com/laravel/telescope/pull/1576
+
+## [v5.5.1](https://github.com/laravel/telescope/compare/v5.5.0...v5.5.1) - 2025-03-10
+
+* Check implementation instead of assuming it is View by [@AJenbo](https://github.com/AJenbo) in https://github.com/laravel/telescope/pull/1571
+
+## [v5.5.0](https://github.com/laravel/telescope/compare/v5.4.0...v5.5.0) - 2025-02-11
+
+* [5.x] Config for queue delay by [@techieforfun](https://github.com/techieforfun) in https://github.com/laravel/telescope/pull/1563
+* Supports Laravel 12 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1565
+* Ensure `formatForTelescope` method is used in request watcher by [@duncanmcclean](https://github.com/duncanmcclean) in https://github.com/laravel/telescope/pull/1566
+* Bump serialize-javascript from 6.0.1 to 6.0.2 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1567
+
+## [v5.4.0](https://github.com/laravel/telescope/compare/v5.3.0...v5.4.0) - 2025-01-24
+
+* [5.x] Save and view response headers by [@gdebrauwer](https://github.com/gdebrauwer) in https://github.com/laravel/telescope/pull/1561
+* [5.x] Ability to override how objects are serialized by [@duncanmcclean](https://github.com/duncanmcclean) in https://github.com/laravel/telescope/pull/1562
 
 ## [v5.3.0](https://github.com/laravel/telescope/compare/v5.2.6...v5.3.0) - 2024-12-26
 

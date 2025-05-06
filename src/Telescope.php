@@ -663,13 +663,15 @@ class Telescope
                 $updateResult = $storage->update(static::collectUpdates($batchId)) ?: Collection::make();
 
                 if (! isset($_ENV['VAPOR_SSM_PATH'])) {
+                    $delay = config('telescope.queue.delay');
+
                     $updateResult->whenNotEmpty(fn ($pendingUpdates) => rescue(fn () => ProcessPendingUpdates::dispatch(
                         $pendingUpdates,
                     )->onConnection(
                         config('telescope.queue.connection')
                     )->onQueue(
                         config('telescope.queue.queue')
-                    )->delay(now()->addSeconds(10))));
+                    )->delay(is_numeric($delay) && $delay > 0 ? now()->addSeconds($delay) : null)));
                 }
 
                 if ($storage instanceof TerminableRepository) {

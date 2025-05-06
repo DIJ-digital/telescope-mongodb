@@ -5,6 +5,7 @@ namespace Laravel\Telescope\Tests\Watchers;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Laravel\Telescope\EntryType;
 use Laravel\Telescope\Tests\FeatureTestCase;
 use Laravel\Telescope\Watchers\RequestWatcher;
@@ -109,11 +110,11 @@ class RequestWatchersTest extends FeatureTestCase
         $this->assertSame('********', $entry->content['headers']['php-auth-pw']);
     }
 
-    public function test_it_stores_and_displays_array_of_request_headers()
+    public function test_it_stores_and_displays_array_of_request_and_response_headers()
     {
         Route::post('/dashboard', function () {
             return response('success')->withHeaders([
-                'X-Foo' => ['first', 'second'],
+                'X-Foo' => ['third', 'fourth'],
             ]);
         });
 
@@ -125,6 +126,7 @@ class RequestWatchersTest extends FeatureTestCase
 
         $this->assertSame(EntryType::REQUEST, $entry->type);
         $this->assertSame('first, second', $entry->content['headers']['x-bar']);
+        $this->assertSame('third, fourth', $entry->content['response_headers']['x-foo']);
     }
 
     public function test_request_watcher_handles_file_uploads()
@@ -174,5 +176,51 @@ class RequestWatchersTest extends FeatureTestCase
         $this->assertSame('GET', $entry->content['method']);
         $this->assertSame(200, $entry->content['response_status']);
         $this->assertSame('plain telescope response', $entry->content['response']);
+    }
+
+    public function test_request_watcher_records_plain_text_payload()
+    {
+        Route::post('/receive-plain-text', function () {
+            return response()->json(['ok' => 'yeah']);
+        });
+
+        $this->call(
+            'POST',
+            '/receive-plain-text',
+            server: $this->transformHeadersToServerVars(['Content-type' => 'text/plain']),
+            content: 'plain-text-content'
+        );
+
+        $entry = $this->loadTelescopeEntries()->first();
+        $this->assertSame(EntryType::REQUEST, $entry->type);
+        $this->assertSame('POST', $entry->content['method']);
+        $this->assertSame('plain-text-content', $entry->content['payload']);
+    }
+
+    public function test_request_watcher_calls_format_for_telescope_method_if_it_exists()
+    {
+        View::addNamespace('tests', __DIR__.'/../stubs/views');
+
+        Route::get('/fake-view', function () {
+            return Response::make(
+                View::make('tests::fake-view', ['items' => new FormatForTelescopeClass])
+            );
+        });
+
+        $this->get('/fake-view')->assertSuccessful();
+
+        $entry = $this->loadTelescopeEntries()->first();
+        $this->assertSame(EntryType::REQUEST, $entry->type);
+        $this->assertEquals(['Telescope', 'Laravel', 'PHP'], $entry->content['response']['data']['items']['properties']);
+    }
+}
+
+class FormatForTelescopeClass
+{
+    public function formatForTelescope(): array
+    {
+        return [
+            'Telescope', 'Laravel', 'PHP',
+        ];
     }
 }

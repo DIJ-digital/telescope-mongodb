@@ -9,7 +9,7 @@
 
 ## Introduction
 
-***This package is only compatible with Laravel 11***
+***This package is only compatible with Laravel 11 & 12***
 
 This fork allows you to use Laravel Telescope with MongoDB.
 

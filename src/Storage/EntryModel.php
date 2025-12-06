@@ -3,6 +3,7 @@
 namespace Laravel\Telescope\Storage;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use MongoDB\Laravel\Eloquent\Model;
 use Laravel\Telescope\Database\Factories\EntryModelFactory;
 
@@ -122,12 +123,20 @@ class EntryModel extends Model
                 return $query;
             }
 
-            return $query->whereIn('uuid', function ($query) use ($tags) {
-                $query->select('entry_uuid')->from('telescope_entries_tags')
-                    ->whereIn('entry_uuid', function ($query) use ($tags) {
-                        $query->select('entry_uuid')->from('telescope_entries_tags')->whereIn('tag', $tags->all());
-                    });
-            });
+            $connection = $this->getConnectionName();
+            $entryUuids = DB::connection($connection)
+                ->table('telescope_entries_tags')
+                ->whereIn('tag', $tags->all())
+                ->pluck('entry_uuid')
+                ->unique()
+                ->values()
+                ->all();
+
+            if (empty($entryUuids)) {
+                return $query->where('uuid', '=', '');
+            }
+
+            return $query->whereIn('uuid', $entryUuids);
         });
 
         return $this;

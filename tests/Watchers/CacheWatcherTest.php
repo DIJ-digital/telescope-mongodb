@@ -7,23 +7,22 @@ use Laravel\Telescope\EntryType;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\Tests\FeatureTestCase;
 use Laravel\Telescope\Watchers\CacheWatcher;
+use Orchestra\Testbench\Attributes\WithConfig;
 
+#[WithConfig('telescope.watchers', [
+    CacheWatcher::class => [
+        'enabled' => true,
+        'hidden' => [
+            'my-hidden-value-key',
+        ],
+        'ignore' => [
+            'laravel:pulse:*',
+            'ignored-key',
+        ],
+    ],
+])]
 class CacheWatcherTest extends FeatureTestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        parent::getEnvironmentSetUp($app);
-
-        $app->get('config')->set('telescope.watchers', [
-            CacheWatcher::class => [
-                'enabled' => true,
-                'hidden' => [
-                    'my-hidden-value-key',
-                ],
-            ],
-        ]);
-    }
-
     public function test_cache_watcher_registers_missed_entries()
     {
         $this->app->get(Repository::class)->get('empty-key');
@@ -110,5 +109,22 @@ class CacheWatcherTest extends FeatureTestCase
         $this->assertSame('hit', $entry->content['type']);
         $this->assertSame('my-hidden-value-key', $entry->content['key']);
         $this->assertSame('********', $entry->content['value']);
+    }
+
+    public function test_cache_watcher_skips_recording_ignored_cache_keys()
+    {
+        $this->app->get(Repository::class)->put('ignored-key', 'laravel');
+        $this->app->get(Repository::class)->put('laravel:pulse:restart', 'laravel');
+        $this->app->get(Repository::class)->put('my-key', 'laravel');
+
+        $count = $this->loadTelescopeEntries()->count();
+        $entry = $this->loadTelescopeEntries()->first();
+
+        $this->assertSame(1, $count);
+
+        $this->assertSame(EntryType::CACHE, $entry->type);
+        $this->assertSame('set', $entry->content['type']);
+        $this->assertSame('my-key', $entry->content['key']);
+        $this->assertSame('laravel', $entry->content['value']);
     }
 }

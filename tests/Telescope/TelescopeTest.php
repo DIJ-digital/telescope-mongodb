@@ -9,23 +9,20 @@ use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\Tests\FeatureTestCase;
 use Laravel\Telescope\Watchers\QueryWatcher;
+use Orchestra\Testbench\Attributes\WithConfig;
 
+#[WithConfig('telescope.watchers', [
+    QueryWatcher::class => [
+        'enabled' => true,
+        'slow' => 0.9,
+    ],
+])]
 class TelescopeTest extends FeatureTestCase
 {
     private $count = 0;
 
-    protected function getEnvironmentSetUp($app)
-    {
-        parent::getEnvironmentSetUp($app);
-
-        $app->get('config')->set('telescope.watchers', [
-            QueryWatcher::class => [
-                'enabled' => true,
-                'slow' => 0.9,
-            ],
-        ]);
-    }
-
+    /** {@inheritdoc} */
+    #[\Override]
     protected function tearDown(): void
     {
         Telescope::$afterRecordingHook = null;
@@ -33,10 +30,7 @@ class TelescopeTest extends FeatureTestCase
         parent::tearDown();
     }
 
-    /**
-     * @test
-     */
-    public function run_after_recording_callback()
+    public function test_run_after_recording_callback()
     {
         Telescope::afterRecording(function (Telescope $telescope, IncomingEntry $entry) {
             $this->count++;
@@ -49,10 +43,7 @@ class TelescopeTest extends FeatureTestCase
         $this->assertSame(2, $this->count);
     }
 
-    /**
-     * @test
-     */
-    public function after_recording_callback_can_store_and_flush()
+    public function test_after_recording_callback_can_store_and_flush()
     {
         Telescope::afterRecording(function (Telescope $telescope, IncomingEntry $entry) {
             if (count($telescope::$entriesQueue) > 1) {
@@ -74,10 +65,7 @@ class TelescopeTest extends FeatureTestCase
         $this->assertCount(1, Telescope::$entriesQueue);
     }
 
-    /**
-     * @test
-     */
-    public function run_after_store_callback()
+    public function test_run_after_store_callback()
     {
         $storedEntries = null;
         $storedBatchId = null;

@@ -4,6 +4,7 @@ namespace Laravel\Telescope;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Telescope\Actions\UninstallAction;
 use Laravel\Telescope\Contracts\ClearableRepository;
 use Laravel\Telescope\Contracts\EntriesRepository;
 use Laravel\Telescope\Contracts\PrunableRepository;
@@ -20,6 +21,7 @@ class TelescopeServiceProvider extends ServiceProvider
     {
         $this->registerCommands();
         $this->registerPublishing();
+        $this->registerPrePackageUninstallListener();
 
         if (! config('telescope.enabled')) {
             return;
@@ -76,10 +78,6 @@ class TelescopeServiceProvider extends ServiceProvider
             $this->{$publishesMigrationsMethod}([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
             ], 'telescope-migrations');
-
-            $this->publishes([
-                __DIR__.'/../public' => public_path('vendor/telescope'),
-            ], ['telescope-assets', 'laravel-assets']);
 
             $this->publishes([
                 __DIR__.'/../config/telescope.php' => config_path('telescope.php'),
@@ -164,5 +162,15 @@ class TelescopeServiceProvider extends ServiceProvider
         $this->app->when(DatabaseEntriesRepository::class)
             ->needs('$chunkSize')
             ->give(config('telescope.storage.database.chunk'));
+    }
+
+    /**
+     * Register a pre-package uninstallation listener.
+     */
+    protected function registerPrePackageUninstallListener(): void
+    {
+        $this->app['events']->listen('composer_package.laravel/telescope:pre_uninstall', function () {
+            $this->app->make(UninstallAction::class)->handle();
+        });
     }
 }

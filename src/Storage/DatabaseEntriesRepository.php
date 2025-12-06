@@ -41,7 +41,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
      * Create a new database repository.
      *
      * @param  string  $connection
-     * @param  int  $chunkSize
+     * @param  int|null  $chunkSize
      * @return void
      */
     public function __construct(string $connection, ?int $chunkSize = null)
@@ -126,7 +126,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     /**
      * Store the given array of entries.
      *
-     * @param  \Illuminate\Support\Collection|\Laravel\Telescope\IncomingEntry[]  $entries
+     * @param  \Illuminate\Support\Collection<int, \Laravel\Telescope\IncomingEntry>  $entries
      * @return void
      */
     public function store(Collection $entries)
@@ -155,7 +155,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     /**
      * Store the given array of exception entries.
      *
-     * @param  \Illuminate\Support\Collection|\Laravel\Telescope\IncomingEntry[]  $exceptions
+     * @param  \Illuminate\Support\Collection<int, \Laravel\Telescope\IncomingEntry>  $exceptions
      * @return void
      */
     protected function storeExceptions(Collection $exceptions)
@@ -167,13 +167,15 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
                 $this->table('telescope_entries')
                         ->where('type', EntryType::EXCEPTION)
                         ->where('family_hash', $exception->familyHash())
+                        ->where('should_display_on_index', true)
                         ->update(['should_display_on_index' => false]);
 
                 return array_merge($exception->toArray(), [
                     'family_hash' => $exception->familyHash(),
-                    'content' => json_encode(array_merge(
-                        $exception->content, ['occurrences' => $occurrences + 1]
-                    )),
+                    'content' => json_encode(
+                        array_merge($exception->content, ['occurrences' => $occurrences + 1]),
+                        JSON_INVALID_UTF8_SUBSTITUTE
+                    ),
                 ]);
             })->values()->toArray());
         });
@@ -184,7 +186,7 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     /**
      * Store the tags for the given entries.
      *
-     * @param  \Illuminate\Support\Collection  $results
+     * @param  \Illuminate\Support\Collection<string, array<array-key, mixed>>  $results
      * @return void
      */
     protected function storeTags(Collection $results)

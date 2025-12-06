@@ -76,8 +76,8 @@ return [
     */
 
     'queue' => [
-        'connection' => env('TELESCOPE_QUEUE_CONNECTION', null),
-        'queue' => env('TELESCOPE_QUEUE', null),
+        'connection' => env('TELESCOPE_QUEUE_CONNECTION'),
+        'queue' => env('TELESCOPE_QUEUE'),
         'delay' => env('TELESCOPE_QUEUE_DELAY', 10),
     ],
 
@@ -116,6 +116,7 @@ return [
         'livewire*',
         'nova-api*',
         'pulse*',
+        '_boost*',
     ],
 
     'ignore_commands' => [
@@ -139,9 +140,13 @@ return [
         Watchers\CacheWatcher::class => [
             'enabled' => env('TELESCOPE_CACHE_WATCHER', true),
             'hidden' => [],
+            'ignore' => [],
         ],
 
-        Watchers\ClientRequestWatcher::class => env('TELESCOPE_CLIENT_REQUEST_WATCHER', true),
+        Watchers\ClientRequestWatcher::class => [
+            'enabled' => env('TELESCOPE_CLIENT_REQUEST_WATCHER', true),
+            'ignore_hosts' => [],
+        ],
 
         Watchers\CommandWatcher::class => [
             'enabled' => env('TELESCOPE_COMMAND_WATCHER', true),

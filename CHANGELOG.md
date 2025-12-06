@@ -1,6 +1,93 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/telescope/compare/v5.7.0...5.x)
+## [Unreleased](https://github.com/laravel/telescope/compare/v5.15.1...5.x)
+
+## [v5.15.1](https://github.com/laravel/telescope/compare/v5.15.0...v5.15.1) - 2025-11-25
+
+* [5.x] PHP 8.5 Compatibility by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1658
+
+## [v5.15.0](https://github.com/laravel/telescope/compare/v5.14.1...v5.15.0) - 2025-10-23
+
+* Bump vite from 5.4.20 to 5.4.21 by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/telescope/pull/1649
+* feat: add shouldIgnoreHosts method to filter HTTP client requests by host by [@artengin](https://github.com/artengin) in https://github.com/laravel/telescope/pull/1650
+
+## [v5.14.1](https://github.com/laravel/telescope/compare/v5.14.0...v5.14.1) - 2025-10-12
+
+* Fix: Record IncomingExceptionEntry with binary content by [@jlswanson28694](https://github.com/jlswanson28694) in https://github.com/laravel/telescope/pull/1646
+* [5.x] Simplify control flow by [@AhmedAlaa4611](https://github.com/AhmedAlaa4611) in https://github.com/laravel/telescope/pull/1645
+
+## [v5.14.0](https://github.com/laravel/telescope/compare/v5.13.0...v5.14.0) - 2025-10-06
+
+* [5.x] chunk on number of tags rather than number of entries by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1644
+
+## [v5.13.0](https://github.com/laravel/telescope/compare/v5.12.0...v5.13.0) - 2025-09-30
+
+* [5.x] Introduce pre-package uninstall listener by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1641
+
+## [v5.12.0](https://github.com/laravel/telescope/compare/v5.11.4...v5.12.0) - 2025-09-18
+
+* ignore laravel boost routes by [@zackAJ](https://github.com/zackAJ) in https://github.com/laravel/telescope/pull/1636
+
+## [v5.11.4](https://github.com/laravel/telescope/compare/v5.11.3...v5.11.4) - 2025-09-12
+
+* [5.x] multiline ternary formatting by [@browner12](https://github.com/browner12) in https://github.com/laravel/telescope/pull/1631
+* fix: treat sqlsrv as valid 'transactsql' type for sql-formatter by [@iBotPeaches](https://github.com/iBotPeaches) in https://github.com/laravel/telescope/pull/1633
+* Bump vite from 5.4.19 to 5.4.20 by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/telescope/pull/1635
+
+## [v5.11.3](https://github.com/laravel/telescope/compare/v5.11.2...v5.11.3) - 2025-08-21
+
+* Fix missing lodash on Dump screen by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1628
+
+## [v5.11.2](https://github.com/laravel/telescope/compare/v5.11.1...v5.11.2) - 2025-08-16
+
+* [5.x] Removed redundant default values from config file by [@weshooper](https://github.com/weshooper) in https://github.com/laravel/telescope/pull/1626
+
+## [v5.11.1](https://github.com/laravel/telescope/compare/v5.11.0...v5.11.1) - 2025-08-14
+
+* Remove `telescope-assets` publishing by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1624
+* [5.x] Rewind stream after getting the body by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1625
+
+## [v5.11.0](https://github.com/laravel/telescope/compare/v5.10.2...v5.11.0) - 2025-08-03
+
+* [5.x] Fix Streaming Issue by [@michaelnabil230](https://github.com/michaelnabil230) in https://github.com/laravel/telescope/pull/1621
+* [5.x] Include driver in Query content to enable proper formatting by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1620
+* [5.x] comments fix by [@cosmastech](https://github.com/cosmastech) in https://github.com/laravel/telescope/pull/1619
+
+## [v5.10.2](https://github.com/laravel/telescope/compare/v5.10.1...v5.10.2) - 2025-07-24
+
+* [5.x] Fix compile assets by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1616
+
+## [v5.10.1](https://github.com/laravel/telescope/compare/v5.10.0...v5.10.1) - 2025-07-22
+
+* [5.x] Use match expressions in place of switch statements by [@xurshudyan](https://github.com/xurshudyan) in https://github.com/laravel/telescope/pull/1605
+* Fix batch function call on null by [@Davitig](https://github.com/Davitig) in https://github.com/laravel/telescope/pull/1606
+* Fix missing `_` import and supported Vite by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1609
+* Bump form-data from 4.0.2 to 4.0.4 by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/telescope/pull/1613
+
+## [v5.10.0](https://github.com/laravel/telescope/compare/v5.9.1...v5.10.0) - 2025-07-07
+
+* Migrate to Vite by [@nckrtl](https://github.com/nckrtl) in https://github.com/laravel/telescope/pull/1598
+* Fix workbench integration and fix `compile-assets` build by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/telescope/pull/1601
+* Bump esbuild and vite by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1600
+* Apply PSR-3 replacements in Telescope logs by [@DragosMocrii](https://github.com/DragosMocrii) in https://github.com/laravel/telescope/pull/1604
+* Feature/show gates response message by [@Geelik](https://github.com/Geelik) in https://github.com/laravel/telescope/pull/1570
+
+## [v5.9.1](https://github.com/laravel/telescope/compare/v5.9.0...v5.9.1) - 2025-06-10
+
+* [5.x] Fixes non-needed update on `telescope_entries` by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/telescope/pull/1599
+
+## [v5.9.0](https://github.com/laravel/telescope/compare/v5.8.0...v5.9.0) - 2025-06-03
+
+* Fix broken preview image in `README.md` by [@sajjadhossainshohag](https://github.com/sajjadhossainshohag) in https://github.com/laravel/telescope/pull/1596
+* feat: Added `laravel:reverb:restart` to CacheWatcher default ignore list by [@Hyrran](https://github.com/Hyrran) in https://github.com/laravel/telescope/pull/1597
+
+## [v5.8.0](https://github.com/laravel/telescope/compare/v5.7.0...v5.8.0) - 2025-05-26
+
+* Update logo by [@iamdavidhill](https://github.com/iamdavidhill) in https://github.com/laravel/telescope/pull/1581
+* Bump http-proxy-middleware from 2.0.6 to 2.0.9 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1584
+* Bump axios from 1.7.4 to 1.8.2 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1585
+* Bump elliptic from 6.6.0 to 6.6.1 by [@dependabot](https://github.com/dependabot) in https://github.com/laravel/telescope/pull/1586
+* [5.x] Add ignore option to CacheWatcher by [@mostafaznv](https://github.com/mostafaznv) in https://github.com/laravel/telescope/pull/1594
 
 ## [v5.7.0](https://github.com/laravel/telescope/compare/v5.6.0...v5.7.0) - 2025-03-27
 

@@ -71,8 +71,8 @@ class ExtractTags
     protected static function extractExplicitTags($job)
     {
         return $job instanceof CallQueuedListener
-                    ? static::tagsForListener($job)
-                    : static::explicitTags(static::targetsFor($job));
+            ? static::tagsForListener($job)
+            : static::explicitTags(static::targetsFor($job));
     }
 
     /**
@@ -111,18 +111,13 @@ class ExtractTags
      */
     protected static function targetsFor($job)
     {
-        switch (true) {
-            case $job instanceof BroadcastEvent:
-                return [$job->event];
-            case $job instanceof CallQueuedListener:
-                return [static::extractEvent($job)];
-            case $job instanceof SendQueuedMailable:
-                return [$job->mailable];
-            case $job instanceof SendQueuedNotifications:
-                return [$job->notification];
-            default:
-                return [$job];
-        }
+        return match (true) {
+            $job instanceof BroadcastEvent => [$job->event],
+            $job instanceof CallQueuedListener => [static::extractEvent($job)],
+            $job instanceof SendQueuedMailable => [$job->mailable],
+            $job instanceof SendQueuedNotifications => [$job->notification],
+            default => [$job],
+        };
     }
 
     /**
@@ -135,7 +130,9 @@ class ExtractTags
     {
         return collect($targets)->map(function ($target) {
             return collect((new ReflectionClass($target))->getProperties())->map(function ($property) use ($target) {
-                $property->setAccessible(true);
+                if (PHP_VERSION_ID < 80500) {
+                    $property->setAccessible(true);
+                }
 
                 if (PHP_VERSION_ID < 70400 || ! is_object($target) || $property->isInitialized($target)) {
                     return static::resolveValue($property->getValue($target));
@@ -166,8 +163,8 @@ class ExtractTags
     protected static function extractEvent($job)
     {
         return isset($job->data[0]) && is_object($job->data[0])
-                        ? $job->data[0]
-                        : new stdClass;
+            ? $job->data[0]
+            : new stdClass;
     }
 
     /**
@@ -178,11 +175,10 @@ class ExtractTags
      */
     protected static function resolveValue($value)
     {
-        switch (true) {
-            case $value instanceof Model:
-                return collect([$value]);
-            case $value instanceof Collection:
-                return $value->flatten();
-        }
+        return match (true) {
+            $value instanceof Model => collect([$value]),
+            $value instanceof Collection => $value->flatten(),
+            default => null,
+        };
     }
 }

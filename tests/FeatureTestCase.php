@@ -10,14 +10,19 @@ use Laravel\Telescope\Storage\DatabaseEntriesRepository;
 use Laravel\Telescope\Storage\EntryModel;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeServiceProvider;
-use Orchestra\Testbench\Concerns\WithLaravelMigrations;
+use Orchestra\Testbench\Attributes\WithConfig;
+use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 
+#[WithMigration]
+#[WithConfig('logging.default', 'errorlog')]
 class FeatureTestCase extends TestCase
 {
-    use WithWorkbench, RefreshDatabase, WithLaravelMigrations;
+    use WithWorkbench, RefreshDatabase;
 
+    /** {@inheritdoc} */
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -28,6 +33,8 @@ class FeatureTestCase extends TestCase
         Telescope::$afterStoringHooks = [];
     }
 
+    /** {@inheritdoc} */
+    #[\Override]
     protected function tearDown(): void
     {
         Telescope::flushEntries();
@@ -38,6 +45,8 @@ class FeatureTestCase extends TestCase
         parent::tearDown();
     }
 
+    /** {@inheritdoc} */
+    #[\Override]
     protected function getPackageProviders($app)
     {
         return [
@@ -45,11 +54,15 @@ class FeatureTestCase extends TestCase
         ];
     }
 
+    /** {@inheritdoc} */
+    #[\Override]
     public function ignorePackageDiscoveriesFrom()
     {
         return ['*', 'spatie/laravel-ray'];
     }
 
+    /** {@inheritdoc} */
+    #[\Override]
     protected function resolveApplicationCore($app)
     {
         parent::resolveApplicationCore($app);
@@ -59,26 +72,19 @@ class FeatureTestCase extends TestCase
         });
     }
 
-    /**
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
+    /** {@inheritdoc} */
+    #[\Override]
+    protected function defineEnvironment($app)
     {
-        $config = $app->get('config');
-
-        $config->set('logging.default', 'errorlog');
-
-        $config->set('database.default', 'testbench');
-
-        $config->set('telescope.storage.database.connection', 'testbench');
-
-        $config->set('queue.batching.database', 'testbench');
-
-        $config->set('database.connections.testbench', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
+        $app->make('config')->set([
+            'database.default' => 'testbench',
+            'telescope.storage.database.connection' => 'testbench',
+            'queue.batching.database' => 'testbench',
+            'database.connections.testbench' => [
+                'driver' => 'sqlite',
+                'database' => ':memory:',
+                'prefix' => '',
+            ],
         ]);
 
         $app->when(DatabaseEntriesRepository::class)
